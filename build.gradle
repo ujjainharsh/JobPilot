@@ -20,67 +20,24 @@ repositories {
 
 dependencies {
 
-    // =========================================================
-    // WEB / REST API
-    // =========================================================
-
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-
-
-    // =========================================================
-    // VALIDATION
-    // =========================================================
-
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-
-    // =========================================================
-    // SECURITY
-    // =========================================================
-
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
-
-
-    // =========================================================
-    // WEB CLIENT
-    // =========================================================
-
     implementation 'org.springframework.boot:spring-boot-starter-webclient'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
-    // =========================================================
-    // ACTUATOR
-    // =========================================================
-
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-
-    // =========================================================
-    // OPENAPI / SWAGGER
-    // =========================================================
-
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
 
-
-    // =========================================================
-    // LOMBOK
-    // =========================================================
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-
-
-    // =========================================================
-    // DEVELOPMENT
-    // =========================================================
-
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 
-    // =========================================================
-    // TESTING
-    // =========================================================
 
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test'
@@ -113,7 +70,7 @@ openApiGenerate {
 
     outputDir = "$buildDir/openapi-temp"
 
-    modelPackage = "com.jobpilot.model"
+    modelPackage = "com.jobpilot.model.api"
 
     configOptions = [
             useSpringBoot4 : "true",
@@ -154,9 +111,9 @@ tasks.register("copyOpenApiModels", Copy) {
 
     dependsOn tasks.named("openApiGenerate")
 
-    from("$buildDir/openapi-temp/src/main/java/com/jobpilot/model")
+    from("$buildDir/openapi-temp/src/main/java/com/jobpilot/model/api")
 
-    into("$rootDir/src/main/java/com/jobpilot/model")
+    into("$rootDir/src/main/java/com/jobpilot/model/api")
 
     include("**/*.java")
 }

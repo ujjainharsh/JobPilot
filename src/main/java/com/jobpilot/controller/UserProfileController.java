@@ -17,9 +17,6 @@ public class UserProfileController {
 
     private final UserProfileService userProfileService;
 
-    /**
-     * Create a new user profile.
-     */
     @PostMapping
     public ResponseEntity<UserProfileResponse> createProfile(
             @Valid @RequestBody UserProfileRequest request) {
@@ -32,52 +29,40 @@ public class UserProfileController {
                 .body(response);
     }
 
-    /**
-     * Get the current user's profile.
-     */
-    @GetMapping
-    public ResponseEntity<UserProfileResponse> getProfile() {
-
-        UserProfileResponse response =
-                userProfileService.getProfile();
-
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Completely replace the current user's profile.
-     */
-    @PutMapping
-    public ResponseEntity<UserProfileResponse> updateProfile(
-            @Valid @RequestBody UserProfileRequest request) {
-
-        UserProfileResponse response =
-                userProfileService.updateProfile(request);
-
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Partially update the current user's profile.
-     */
-    @PatchMapping
-    public ResponseEntity<UserProfileResponse> patchProfile(
-            @RequestBody UserProfilePatchRequest request) {
-
-        UserProfileResponse response =
-                userProfileService.patchProfile(request);
-
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Delete the current user's profile.
-     */
-    @DeleteMapping
-    public ResponseEntity<Void> deleteProfile() {
-
-        userProfileService.deleteProfile();
-
-        return ResponseEntity.noContent().build();
-    }
+//    @GetMapping
+//    public ResponseEntity<UserProfileResponse> getProfile() {
+//
+//        UserProfileResponse response =
+//                userProfileService.getProfile();
+//
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @PutMapping
+//    public ResponseEntity<UserProfileResponse> updateProfile(
+//            @Valid @RequestBody UserProfileRequest request) {
+//
+//        UserProfileResponse response =
+//                userProfileService.updateProfile(request);
+//
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @PatchMapping
+//    public ResponseEntity<UserProfileResponse> patchProfile(
+//            @RequestBody UserProfilePatchRequest request) {
+//
+//        UserProfileResponse response =
+//                userProfileService.patchProfile(request);
+//
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @DeleteMapping
+//    public ResponseEntity<Void> deleteProfile() {
+//
+//        userProfileService.deleteProfile();
+//
+//        return ResponseEntity.noContent().build();
+//    }
 }

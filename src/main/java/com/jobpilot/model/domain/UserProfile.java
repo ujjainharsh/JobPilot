@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import java.net.URI;
 import java.time.LocalDate;
 
 @Getter
@@ -28,7 +29,7 @@ public class UserProfile {
     private String preferredLocation;
     private String highestQualification;
 
-    private String linkedinUrl;
-    private String githubUrl;
-    private String portfolioUrl;
+    private URI linkedinUrl;
+    private URI githubUrl;
+    private URI portfolioUrl;
 }
