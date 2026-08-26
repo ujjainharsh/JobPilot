@@ -47,7 +47,7 @@ dependencies {
     // =========================================================
 
     implementation 'org.springframework.boot:spring-boot-starter-webclient'
-
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     // =========================================================
     // ACTUATOR

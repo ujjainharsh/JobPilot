@@ -1,8 +1,8 @@
 package com.jobpilot.service;
 
-import com.jobpilot.model.UserProfilePatchRequest;
-import com.jobpilot.model.UserProfileRequest;
-import com.jobpilot.model.UserProfileResponse;
+import com.jobpilot.model.api.UserProfilePatchRequest;
+import com.jobpilot.model.api.UserProfileRequest;
+import com.jobpilot.model.api.UserProfileResponse;
 import org.springframework.stereotype.Service;
 
 @Service
