@@ -17,20 +17,12 @@ public class UserDocumentEntity {
 
     @Id
     private String id;
-
     private String profileId;
-
     private String fileName;
-
     private String contentType;
-
     private Long fileSize;
-
     private String storageId;
-
     private String documentType;
-
     private LocalDateTime uploadedAt;
-
     private String downloadUrl;
 }

@@ -2,7 +2,6 @@ package com.jobpilot.controller;
 
 import com.jobpilot.model.api.UserProfileRequest;
 import com.jobpilot.model.api.UserProfileResponse;
-import com.jobpilot.model.api.UserProfilePatchRequest;
 import com.jobpilot.service.UserProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,40 +28,28 @@ public class UserProfileController {
                 .body(response);
     }
 
-//    @GetMapping
-//    public ResponseEntity<UserProfileResponse> getProfile() {
-//
-//        UserProfileResponse response =
-//                userProfileService.getProfile();
-//
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @PutMapping
-//    public ResponseEntity<UserProfileResponse> updateProfile(
-//            @Valid @RequestBody UserProfileRequest request) {
-//
-//        UserProfileResponse response =
-//                userProfileService.updateProfile(request);
-//
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @PatchMapping
-//    public ResponseEntity<UserProfileResponse> patchProfile(
-//            @RequestBody UserProfilePatchRequest request) {
-//
-//        UserProfileResponse response =
-//                userProfileService.patchProfile(request);
-//
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @DeleteMapping
-//    public ResponseEntity<Void> deleteProfile() {
-//
-//        userProfileService.deleteProfile();
-//
-//        return ResponseEntity.noContent().build();
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserProfileResponse> getProfile(@PathVariable String id) {
+
+        UserProfileResponse response =
+                userProfileService.findProfileById(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<UserProfileResponse> updateProfile(
+            @Valid @RequestBody UserProfileRequest request) {
+
+        UserProfileResponse response =
+                userProfileService.updateProfile(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProfile(@PathVariable String id) {
+        userProfileService.deleteProfile(id);
+        return ResponseEntity.noContent().build();
+    }
 }
