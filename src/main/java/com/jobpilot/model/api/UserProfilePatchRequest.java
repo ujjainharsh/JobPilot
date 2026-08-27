@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "UserProfilePatchRequest", description = "Request used to partially update a user profile. Only the fields supplied in the request will be updated. ")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-08-26T23:00:58.793955+05:30[Asia/Kolkata]", comments = "Generator version: 7.17.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-08-26T23:57:26.191196+05:30[Asia/Kolkata]", comments = "Generator version: 7.17.0")
 public class UserProfilePatchRequest {
 
   private @Nullable String firstName;
