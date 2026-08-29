@@ -1,0 +1,20 @@
+spring:
+
+  application:
+    name: jobpilot-ai
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+
+
+  server:
+    port: 8081
