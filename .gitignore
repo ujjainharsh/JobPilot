@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Gradle
+.gradle/
+**/build/
+
+# Node
+**/node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Qdrant local runtime data
+infrastructure/qdrant_storage/
+
+# Logs
+*.log

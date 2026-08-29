@@ -1,0 +1,150 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.1.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '7.17.0'
+}
+
+group = 'com.jobpilot'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-webclient'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-kafka'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webclient-test'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+/*
+ * ============================================================
+ * OPENAPI GENERATOR
+ * ============================================================
+ *
+ * Generate OpenAPI models into a temporary directory.
+ *
+ * We DON'T want generated code directly under src/main.
+ */
+
+openApiGenerate {
+
+    generatorName = "spring"
+
+    inputSpec = "$rootDir/src/main/resources/openapi/jobpilot.yaml"
+
+    outputDir = "$buildDir/openapi-temp"
+
+    modelPackage = "com.jobpilot.model.api"
+
+    additionalProperties =[
+            hideGenerationTimestamp: "true"
+    ]
+
+    configOptions = [
+            useSpringBoot4 : "true",
+            useJakartaEe   : "true",
+            openApiNullable: "false",
+
+            interfaceOnly  : "true",
+            skipDefaultInterface: "true"
+
+    ]
+
+    globalProperties = [
+            models     : "",
+            modelDocs  : "false",
+            modelTests : "false",
+            apis       : "false",
+            apiDocs    : "false",
+            apiTests   : "false"
+    ]
+}
+
+
+/*
+ * ============================================================
+ * COPY GENERATED MODELS
+ * ============================================================
+ *
+ * OpenAPI generates into:
+ *
+ * build/openapi-temp/
+ *
+ * We copy ONLY the generated model Java files into:
+ *
+ * src/main/java/com/jobpilot/model/
+ *
+ */
+
+tasks.register("copyOpenApiModels", Copy) {
+
+    dependsOn tasks.named("openApiGenerate")
+
+    from("$buildDir/openapi-temp/src/main/java/com/jobpilot/model/api")
+
+    into("$rootDir/src/main/java/com/jobpilot/model/api")
+
+    include("**/*.java")
+}
+
+
+/*
+ * ============================================================
+ * COMPILE JAVA
+ * ============================================================
+ *
+ * Make sure OpenAPI models are generated before compilation.
+ */
+
+tasks.named("compileJava") {
+
+    dependsOn tasks.named("copyOpenApiModels")
+}
+
+
+/*
+ * ============================================================
+ * TEST
+ * ============================================================
+ */
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

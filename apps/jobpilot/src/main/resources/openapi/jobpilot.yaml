@@ -1,0 +1,699 @@
+openapi: 3.0.3
+
+info:
+  title: JobPilot API
+  description: API for managing user profiles, resumes and AI-powered resume analysis.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+tags:
+  - name: User Profile
+    description: User profile management APIs
+
+  - name: Resume
+    description: Resume management APIs
+
+  - name: Resume Analysis
+    description: AI-powered resume analysis APIs
+
+
+paths:
+
+  # ============================================================
+  # USER PROFILE
+  # ============================================================
+
+  /api/v1/profile:
+
+    post:
+      tags:
+        - User Profile
+      summary: Create user profile
+      description: Creates a profile for the currently authenticated user.
+      operationId: createProfile
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileRequest'
+
+      responses:
+        '201':
+          description: User profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+        '400':
+          description: Invalid profile data
+
+        '409':
+          description: User profile already exists
+
+
+    get:
+      tags:
+        - User Profile
+      summary: Get user profile
+      description: Returns the profile of the currently authenticated user.
+      operationId: getProfile
+
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+        '404':
+          description: User profile not found
+
+
+    put:
+      tags:
+        - User Profile
+      summary: Replace user profile
+      description: Completely replaces the profile of the currently authenticated user.
+      operationId: updateProfile
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileRequest'
+
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+        '400':
+          description: Invalid profile data
+
+        '404':
+          description: User profile not found
+
+
+    patch:
+      tags:
+        - User Profile
+      summary: Partially update user profile
+      description: Updates only the fields provided in the request.
+      operationId: patchProfile
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfilePatchRequest'
+
+      responses:
+        '200':
+          description: User profile partially updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+        '400':
+          description: Invalid profile data
+
+        '404':
+          description: User profile not found
+
+
+    delete:
+      tags:
+        - User Profile
+      summary: Delete user profile
+      description: Deletes the profile of the currently authenticated user.
+      operationId: deleteProfile
+
+      responses:
+        '204':
+          description: User profile deleted successfully
+
+        '404':
+          description: User profile not found
+
+
+  # ============================================================
+  # RESUME
+  # ============================================================
+
+  /api/v1/profile/resume:
+
+    post:
+      tags:
+        - Resume
+      summary: Upload resume
+      description: Uploads a PDF resume for the currently authenticated user.
+      operationId: uploadResume
+
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - resume
+              properties:
+                resume:
+                  type: string
+                  format: binary
+                  description: PDF resume file
+
+      responses:
+        '201':
+          description: Resume uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResumeResponse'
+
+        '400':
+          description: Invalid resume file
+
+        '413':
+          description: Resume file is too large
+
+
+    get:
+      tags:
+        - Resume
+      summary: Download resume
+      description: Downloads the resume of the currently authenticated user.
+      operationId: downloadResume
+
+      responses:
+        '200':
+          description: Resume PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+        '404':
+          description: Resume not found
+
+
+    delete:
+      tags:
+        - Resume
+      summary: Delete resume
+      description: Deletes the resume of the currently authenticated user.
+      operationId: deleteResume
+
+      responses:
+        '204':
+          description: Resume deleted successfully
+
+        '404':
+          description: Resume not found
+
+
+  # ============================================================
+  # AI RESUME ANALYSIS
+  # ============================================================
+
+  /api/v1/profile/resume/analyze:
+
+    post:
+      tags:
+        - Resume Analysis
+      summary: Analyze resume
+      description: Starts AI-powered analysis of the uploaded resume.
+      operationId: analyzeResume
+
+      responses:
+        '202':
+          description: Resume analysis started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResumeAnalysisResponse'
+
+        '404':
+          description: Resume not found
+
+        '409':
+          description: Resume analysis is already in progress
+
+
+    get:
+      tags:
+        - Resume Analysis
+      summary: Get resume analysis
+      description: Returns the latest AI-powered resume analysis.
+      operationId: getResumeAnalysis
+
+      responses:
+        '200':
+          description: Resume analysis retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResumeAnalysisResponse'
+
+        '404':
+          description: Resume analysis not found
+
+
+# ================================================================
+# COMPONENTS
+# ================================================================
+
+components:
+
+  schemas:
+
+    # ============================================================
+    # USER PROFILE REQUEST
+    # ============================================================
+
+    UserProfileRequest:
+      type: object
+
+      required:
+        - firstName
+        - lastName
+        - email
+        - phone
+
+      properties:
+
+        firstName:
+          type: string
+          description: User's first name
+          example: Harshvardhan
+
+        middleName:
+          type: string
+          description: User's middle name
+          example: Kumar
+
+        lastName:
+          type: string
+          description: User's last name
+          example: Ujjain
+
+        dob:
+          type: string
+          format: date
+          description: User's date of birth
+          example: '1992-05-15'
+
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: harsh@example.com
+
+        phone:
+          type: string
+          description: User's phone number
+          example: '+919876543210'
+
+        location:
+          type: string
+          description: User's current location
+          example: Bangalore
+
+        preferredLocation:
+          type: string
+          description: User's preferred job location
+          example: Bangalore
+
+        highestQualification:
+          type: string
+          description: User's highest qualification
+          example: Bachelor of Technology
+
+        linkedinUrl:
+          type: string
+          format: uri
+          description: LinkedIn profile URL
+          example: https://www.linkedin.com/in/example
+
+        githubUrl:
+          type: string
+          format: uri
+          description: GitHub profile URL
+          example: https://github.com/example
+
+        portfolioUrl:
+          type: string
+          format: uri
+          description: Portfolio URL
+          example: https://example.com
+
+
+    # ============================================================
+    # USER PROFILE PATCH REQUEST
+    # ============================================================
+
+    UserProfilePatchRequest:
+      type: object
+
+      description: >
+        Request used to partially update a user profile.
+        Only the fields supplied in the request will be updated.
+
+      properties:
+
+        firstName:
+          type: string
+          example: Harshvardhan
+
+        middleName:
+          type: string
+          example: Kumar
+
+        lastName:
+          type: string
+          example: Ujjain
+
+        dob:
+          type: string
+          format: date
+          example: '1992-05-15'
+
+        email:
+          type: string
+          format: email
+          example: harsh@example.com
+
+        phone:
+          type: string
+          example: '+919876543210'
+
+        location:
+          type: string
+          example: Bangalore
+
+        preferredLocation:
+          type: string
+          example: Hyderabad
+
+        highestQualification:
+          type: string
+          example: Master of Technology
+
+        linkedinUrl:
+          type: string
+          format: uri
+          example: https://www.linkedin.com/in/example
+
+        githubUrl:
+          type: string
+          format: uri
+          example: https://github.com/example
+
+        portfolioUrl:
+          type: string
+          format: uri
+          example: https://example.com
+
+
+    # ============================================================
+    # USER PROFILE RESPONSE
+    # ============================================================
+
+    UserProfileResponse:
+      type: object
+
+      properties:
+
+        id:
+          type: string
+          format: uuid
+          description: Unique profile identifier
+
+        firstName:
+          type: string
+
+        middleName:
+          type: string
+
+        lastName:
+          type: string
+
+        dob:
+          type: string
+          format: date
+
+        email:
+          type: string
+          format: email
+
+        phone:
+          type: string
+
+        location:
+          type: string
+
+        preferredLocation:
+          type: string
+
+        highestQualification:
+          type: string
+
+        linkedinUrl:
+          type: string
+          format: uri
+
+        githubUrl:
+          type: string
+          format: uri
+
+        portfolioUrl:
+          type: string
+          format: uri
+
+        resume:
+          $ref: '#/components/schemas/ResumeResponse'
+
+
+    # ============================================================
+    # RESUME RESPONSE
+    # ============================================================
+
+    ResumeResponse:
+      type: object
+
+      properties:
+
+        id:
+          type: string
+          format: uuid
+
+        fileName:
+          type: string
+          example: harsh-resume.pdf
+
+        contentType:
+          type: string
+          example: application/pdf
+
+        fileSize:
+          type: integer
+          format: int64
+          example: 524288
+
+        uploadedAt:
+          type: string
+          format: date-time
+
+        analysisStatus:
+          $ref: '#/components/schemas/AnalysisStatus'
+
+
+    # ============================================================
+    # RESUME ANALYSIS RESPONSE
+    # ============================================================
+
+    ResumeAnalysisResponse:
+      type: object
+
+      properties:
+
+        id:
+          type: string
+          format: uuid
+
+        resumeId:
+          type: string
+          format: uuid
+
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+
+        experience:
+          type: array
+          items:
+            $ref: '#/components/schemas/Experience'
+
+        education:
+          type: array
+          items:
+            $ref: '#/components/schemas/Education'
+
+        resumeSummary:
+          $ref: '#/components/schemas/ResumeSummary'
+
+        analyzedAt:
+          type: string
+          format: date-time
+
+
+    # ============================================================
+    # ANALYSIS STATUS
+    # ============================================================
+
+    AnalysisStatus:
+      type: string
+
+      enum:
+        - NOT_STARTED
+        - IN_PROGRESS
+        - COMPLETED
+        - FAILED
+
+
+    # ============================================================
+    # SKILL
+    # ============================================================
+
+    Skill:
+      type: object
+
+      properties:
+
+        name:
+          type: string
+          example: Java
+
+        category:
+          type: string
+          example: Programming Language
+
+        proficiency:
+          type: string
+          example: Advanced
+
+
+    # ============================================================
+    # EXPERIENCE
+    # ============================================================
+
+    Experience:
+      type: object
+
+      properties:
+
+        company:
+          type: string
+          example: ABC Technologies
+
+        jobTitle:
+          type: string
+          example: Senior Software Engineer
+
+        startDate:
+          type: string
+          format: date
+          example: '2018-01-01'
+
+        endDate:
+          type: string
+          format: date
+          example: '2022-12-31'
+
+        currentlyWorking:
+          type: boolean
+          example: false
+
+        responsibilities:
+          type: array
+          items:
+            type: string
+
+
+    # ============================================================
+    # EDUCATION
+    # ============================================================
+
+    Education:
+      type: object
+
+      properties:
+
+        institution:
+          type: string
+          example: XYZ University
+
+        degree:
+          type: string
+          example: Bachelor of Technology
+
+        fieldOfStudy:
+          type: string
+          example: Computer Science
+
+        startDate:
+          type: string
+          format: date
+
+        endDate:
+          type: string
+          format: date
+
+
+    # ============================================================
+    # RESUME SUMMARY
+    # ============================================================
+
+    ResumeSummary:
+      type: object
+
+      properties:
+
+        summary:
+          type: string
+          example: >
+            Experienced Java developer with strong expertise in Spring Boot,
+            microservices and distributed systems.
+
+        yearsOfExperience:
+          type: number
+          format: double
+          example: 10.0
+
+        strengths:
+          type: array
+          items:
+            type: string
+
+        areasForImprovement:
+          type: array
+          items:
+            type: string
